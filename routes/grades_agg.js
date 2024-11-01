@@ -35,9 +35,9 @@ const pipeline = [
     $group: {
       _id: null,
       totalLearners: { $sum: 1 },
-      above70: {
+      above50: {
         $sum: {
-          $cond: [{ $gt: ["$average", 70] }, 1, 0],
+          $cond: [{ $gt: ["$average", 50] }, 1, 0],
         },
       },
     },
@@ -46,11 +46,11 @@ const pipeline = [
     $project: {
       _id: 0,
       totalLearners: "$totalLearners",
-      above70: 1,
-      percentageAbove70: {
+      above50: 1,
+      percentageAbove50: {
         $multiply: [
           {
-            $divide: ["$above70", "$totalLearners"],
+            $divide: ["$above50", "$totalLearners"],
           },
           100,
         ],
@@ -60,7 +60,7 @@ const pipeline = [
 ];
 
 // Get statistics about learners' grades
-// No student got an average of over 70, so weights will have to be added in the future
+// No student got an average of over 50, so weights will have to be added in the future
 router.get("/stats", async (req, res, next) => {
   try {
     let collection = db.collection("grades");
